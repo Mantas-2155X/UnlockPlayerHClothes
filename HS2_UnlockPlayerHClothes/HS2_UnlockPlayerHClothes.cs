@@ -7,8 +7,6 @@ using BepInEx.Harmony;
 using System.Collections.Generic;
 using System.Linq;
 
-using AIChara;
-
 namespace HS2_UnlockPlayerHClothes {
     [BepInProcess("HoneySelect2")]
     [BepInPlugin(nameof(HS2_UnlockPlayerHClothes), nameof(HS2_UnlockPlayerHClothes), VERSION)]
@@ -27,22 +25,6 @@ namespace HS2_UnlockPlayerHClothes {
 
             HarmonyWrapper.PatchAll(typeof(Transpilers));
             HarmonyWrapper.PatchAll(typeof(HS2_UnlockPlayerHClothes));
-        }
-
-        public static ChaControl[] newGetFemales()
-        {
-            var females = hScene.GetFemales();
-            var males = hScene.GetMales();
-
-            var newFemales = new ChaControl[females.Length + males.Length];
-
-            for (var i = 0; i < females.Length; i++)
-                newFemales[i] = females[i];
-            
-            for (var i = 0; i < males.Length; i++)
-                newFemales[i + females.Length] = males[i];
-
-            return newFemales;
         }
 
         [HarmonyPostfix, HarmonyPatch(typeof(HScene), "SetStartVoice")]

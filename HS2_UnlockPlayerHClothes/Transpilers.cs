@@ -9,6 +9,30 @@ namespace HS2_UnlockPlayerHClothes
 {
     public static class Transpilers
     {
+        [HarmonyTranspiler, HarmonyPatch(typeof(HSceneSpriteChaChoice), "ChangeChaOptions")]
+        public static IEnumerable<CodeInstruction> HSceneSpriteChaChoice_ChangeChaOptions_AllowMalesClothesCategory(IEnumerable<CodeInstruction> instructions)
+        {
+            var il = instructions.ToList();
+            
+            // Ignore turning off males selections
+            var index = il.FindLastIndex(instruction => instruction.opcode == OpCodes.Call && (instruction.operand as MethodInfo)?.Name == "IsNullOrEmpty");
+            if (index <= 0)
+            {
+                HS2_UnlockPlayerHClothes.Logger.LogMessage("Failed transpiling 'HSceneSpriteChaChoice_ChangeChaOptions_AllowMalesClothesCategory' IsNullOrEmpty index not found!");
+                HS2_UnlockPlayerHClothes.Logger.LogWarning("Failed transpiling 'HSceneSpriteChaChoice_ChangeChaOptions_AllowMalesClothesCategory' IsNullOrEmpty index not found!");
+                return il;
+            }
+
+            il[index - 14].opcode = OpCodes.Nop;
+            il[index - 13].opcode = OpCodes.Nop;
+            il[index - 12].opcode = OpCodes.Nop;
+            
+            for (var i = 8; i <= 17; i++)
+                il[index + i].opcode = OpCodes.Nop;
+
+            return il;
+        }
+        
         [HarmonyTranspiler, HarmonyPatch(typeof(HSceneSpriteChaChoice), "Init")]
         public static IEnumerable<CodeInstruction> HSceneSpriteChaChoice_Init_AllowMalesClothesCategory(IEnumerable<CodeInstruction> instructions)
         {
