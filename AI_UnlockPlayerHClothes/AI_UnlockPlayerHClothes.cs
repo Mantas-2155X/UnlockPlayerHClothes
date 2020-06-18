@@ -2,7 +2,6 @@
 
 using BepInEx;
 using BepInEx.Logging;
-using BepInEx.Harmony;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +14,7 @@ namespace AI_UnlockPlayerHClothes {
     [BepInPlugin(nameof(AI_UnlockPlayerHClothes), nameof(AI_UnlockPlayerHClothes), VERSION)]
     public class AI_UnlockPlayerHClothes : BaseUnityPlugin
     {
-        public const string VERSION = "1.4.0";
+        public const string VERSION = "1.4.1";
         
         public new static ManualLogSource Logger;
 
@@ -28,8 +27,9 @@ namespace AI_UnlockPlayerHClothes {
         {
             Logger = base.Logger;
 
-            HarmonyWrapper.PatchAll(typeof(Transpilers));
-            HarmonyWrapper.PatchAll(typeof(AI_UnlockPlayerHClothes));
+            var harmony = new Harmony(nameof(AI_UnlockPlayerHClothes));
+            harmony.PatchAll(typeof(Transpilers));
+            harmony.PatchAll(typeof(AI_UnlockPlayerHClothes));
         }
 
         public static ChaControl[] newGetFemales()

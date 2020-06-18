@@ -2,7 +2,6 @@
 
 using BepInEx;
 using BepInEx.Logging;
-using BepInEx.Harmony;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +11,7 @@ namespace HS2_UnlockPlayerHClothes {
     [BepInPlugin(nameof(HS2_UnlockPlayerHClothes), nameof(HS2_UnlockPlayerHClothes), VERSION)]
     public class HS2_UnlockPlayerHClothes : BaseUnityPlugin
     {
-        public const string VERSION = "1.4.0";
+        public const string VERSION = "1.4.1";
         
         public new static ManualLogSource Logger;
 
@@ -23,8 +22,9 @@ namespace HS2_UnlockPlayerHClothes {
         {
             Logger = base.Logger;
 
-            HarmonyWrapper.PatchAll(typeof(Transpilers));
-            HarmonyWrapper.PatchAll(typeof(HS2_UnlockPlayerHClothes));
+            var harmony = new Harmony(nameof(HS2_UnlockPlayerHClothes));
+            harmony.PatchAll(typeof(Transpilers));
+            harmony.PatchAll(typeof(HS2_UnlockPlayerHClothes));
         }
 
         [HarmonyPostfix, HarmonyPatch(typeof(HScene), "SetStartVoice")]
