@@ -32,4 +32,4 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion(AI_UnlockPlayerHClothes.AI_UnlockPlayerHClothes.VERSION)]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion(AI_UnlockPlayerHClothes.AI_UnlockPlayerHClothes.VERSION)]
