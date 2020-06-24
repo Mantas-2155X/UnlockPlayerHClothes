@@ -101,25 +101,16 @@ namespace HS2_UnlockPlayerHClothes
         {
             var il = instructions.ToList();
 
-            var index = il.FindIndex(instruction => instruction.opcode == OpCodes.Call && (instruction.operand as MethodInfo)?.Name == "get_HData");
+            var index = il.FindIndex(instruction => instruction.opcode == OpCodes.Ldfld && (instruction.operand as FieldInfo)?.Name == "Bath");
             if (index <= 0)
             {
-                HS2_UnlockPlayerHClothes.Logger.LogMessage("Failed transpiling 'HScene_LateUpdate_RemoveClothesLock' get_HData index not found!");
-                HS2_UnlockPlayerHClothes.Logger.LogWarning("Failed transpiling 'HScene_LateUpdate_RemoveClothesLock' get_HData index not found!");
+                HS2_UnlockPlayerHClothes.Logger.LogMessage("Failed transpiling 'HScene_LateUpdate_RemoveClothesLock' Bath index not found!");
+                HS2_UnlockPlayerHClothes.Logger.LogWarning("Failed transpiling 'HScene_LateUpdate_RemoveClothesLock' Bath index not found!");
                 return il;
             }
             
-            var lastindex = il.FindLastIndex(instruction => instruction.opcode == OpCodes.Callvirt && (instruction.operand as MethodInfo)?.Name == "SetClothesState");
-            if (lastindex <= 0)
-            {
-                HS2_UnlockPlayerHClothes.Logger.LogMessage("Failed transpiling 'HScene_LateUpdate_RemoveClothesLock' SetClothesState index not found!");
-                HS2_UnlockPlayerHClothes.Logger.LogWarning("Failed transpiling 'HScene_LateUpdate_RemoveClothesLock' SetClothesState index not found!");
-                return il;
-            }
-            
-            // Disable clothes, shoes, accessory state //
-            for (var i = index; i <= lastindex; i++)
-                il[i].opcode = OpCodes.Nop;
+            il[index - 1].opcode = OpCodes.Nop;
+            il[index].opcode = OpCodes.Ldc_I4_1;
 
             return il;
         }
