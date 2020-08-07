@@ -13,7 +13,7 @@ namespace AI_UnlockPlayerHClothes {
     [BepInPlugin(nameof(AI_UnlockPlayerHClothes), nameof(AI_UnlockPlayerHClothes), VERSION)]
     public class AI_UnlockPlayerHClothes : BaseUnityPlugin
     {
-        public const string VERSION = "1.4.1";
+        public const string VERSION = "1.4.2";
         
         public new static ManualLogSource Logger;
 

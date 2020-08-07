@@ -32,7 +32,7 @@ namespace HS2_UnlockPlayerHClothes
 
             return il;
         }
-        
+        /*
         [HarmonyTranspiler, HarmonyPatch(typeof(HSceneSpriteChaChoice), "Init")]
         public static IEnumerable<CodeInstruction> HSceneSpriteChaChoice_Init_AllowMalesClothesCategory(IEnumerable<CodeInstruction> instructions)
         {
@@ -52,7 +52,7 @@ namespace HS2_UnlockPlayerHClothes
 
             return il;
         }
-
+        */
         [HarmonyTranspiler, HarmonyPatch(typeof(HDropdownCharChoiceTemplate), "CheckCha")]
         public static IEnumerable<CodeInstruction> HDropdownCharChoiceTemplate_CheckCha_AllowMalesClothesCategory(IEnumerable<CodeInstruction> instructions)
         {
@@ -101,16 +101,24 @@ namespace HS2_UnlockPlayerHClothes
         {
             var il = instructions.ToList();
 
-            var index = il.FindIndex(instruction => instruction.opcode == OpCodes.Ldfld && (instruction.operand as FieldInfo)?.Name == "Bath");
-            if (index <= 0)
+            var startindex = il.FindIndex(instruction => instruction.opcode == OpCodes.Call && (instruction.operand as MethodInfo)?.Name == "get_HData");
+            if (startindex <= 0)
             {
-                HS2_UnlockPlayerHClothes.Logger.LogMessage("Failed transpiling 'HScene_LateUpdate_RemoveClothesLock' Bath index not found!");
-                HS2_UnlockPlayerHClothes.Logger.LogWarning("Failed transpiling 'HScene_LateUpdate_RemoveClothesLock' Bath index not found!");
+                HS2_UnlockPlayerHClothes.Logger.LogMessage("Failed transpiling 'HScene_LateUpdate_RemoveClothesLock' get_HData index not found!");
+                HS2_UnlockPlayerHClothes.Logger.LogWarning("Failed transpiling 'HScene_LateUpdate_RemoveClothesLock' get_HData index not found!");
                 return il;
             }
             
-            il[index - 1].opcode = OpCodes.Nop;
-            il[index].opcode = OpCodes.Ldc_I4_1;
+            var endindex = il.FindIndex(instruction => instruction.opcode == OpCodes.Ldfld && (instruction.operand as FieldInfo)?.Name == "ctrlFlag");
+            if (endindex <= 0)
+            {
+                HS2_UnlockPlayerHClothes.Logger.LogMessage("Failed transpiling 'HScene_LateUpdate_RemoveClothesLock' ctrlFlag index not found!");
+                HS2_UnlockPlayerHClothes.Logger.LogWarning("Failed transpiling 'HScene_LateUpdate_RemoveClothesLock' ctrlFlag index not found!");
+                return il;
+            }
+            
+            for (var i = startindex; i <= endindex - 2; i++)
+                il[i].opcode = OpCodes.Nop;
 
             return il;
         }

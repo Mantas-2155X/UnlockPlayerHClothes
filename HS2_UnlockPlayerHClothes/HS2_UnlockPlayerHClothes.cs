@@ -11,7 +11,7 @@ namespace HS2_UnlockPlayerHClothes {
     [BepInPlugin(nameof(HS2_UnlockPlayerHClothes), nameof(HS2_UnlockPlayerHClothes), VERSION)]
     public class HS2_UnlockPlayerHClothes : BaseUnityPlugin
     {
-        public const string VERSION = "1.4.1";
+        public const string VERSION = "1.4.2";
         
         public new static ManualLogSource Logger;
 
