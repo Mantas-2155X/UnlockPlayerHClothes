@@ -6,8 +6,42 @@ using HarmonyLib;
 
 namespace AI_UnlockPlayerHClothes
 {
-    public class Transpilers
+    public class Hooks
     {
+        private static readonly List<int> clothesKindList = new List<int>{0, 2, 1, 3, 5, 6};
+
+        // Read game config and apply clothes state for both males //
+        [HarmonyPostfix, HarmonyPatch(typeof(HScene), "SetStartVoice")]
+        public static void HScene_SetStartVoice_ApplyClothesConfig(HScene __instance)
+        {
+            AI_UnlockPlayerHClothes.hScene = __instance;
+            
+            var hData = Manager.Config.HData;
+            var males = __instance.GetMales();
+
+            if (males[0] != null)
+            {
+                foreach (var kind in clothesKindList.Where(kind => males[0].IsClothesStateKind(kind)))
+                    males[0].SetClothesState(kind, (byte)(hData.Cloth ? 0 : 2));
+            
+                males[0].SetAccessoryStateAll(hData.Accessory);
+                males[0].SetClothesState(7, (byte)(!hData.Shoes ? 2 : 0));
+            }
+            
+            if (males[1] != null)
+            {
+                foreach (var kind in clothesKindList.Where(kind => males[1].IsClothesStateKind(kind)))
+                    males[1].SetClothesState(kind, (byte)(hData.Cloth ? 0 : 2));
+            
+                males[1].SetAccessoryStateAll(hData.Accessory);
+                males[1].SetClothesState(7, (byte)(!hData.Shoes ? 2 : 0));
+            }
+        }
+        
+        // Allow 4 character choices instead of 2 //
+        [HarmonyPrefix, HarmonyPatch(typeof(HSceneSpriteClothCondition), "Init")]
+        public static void HSceneSpriteClothCondition_Init_IncreaseAllState(ref int[] ___allState) => ___allState = new int[4];
+        
         [HarmonyTranspiler, HarmonyPatch(typeof(HSceneSprite), "OnClickMainCategories")]
         public static IEnumerable<CodeInstruction> HSceneSprite_OnClickMainCategories_AllowMalesClothesCategory(IEnumerable<CodeInstruction> instructions)
         {
