@@ -8,7 +8,7 @@ namespace KKS_UnlockPlayerHClothes
     [BepInPlugin(nameof(KKS_UnlockPlayerHClothes), nameof(KKS_UnlockPlayerHClothes), VERSION)]
     public class KKS_UnlockPlayerHClothes : BaseUnityPlugin
     {
-        public const string VERSION = "1.4.3";
+        public const string VERSION = "1.4.4";
         
         public static readonly Dictionary<int, string> extraMaleButtons = new Dictionary<int, string>()
         {
